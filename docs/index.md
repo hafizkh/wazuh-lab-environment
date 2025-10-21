@@ -86,7 +86,7 @@ sudo systemctl status wazuh-agent
 
 | Dashboard | Agent List |
 |-----------|------------|
-| ![Dashboard](./docs/dashboard-screenshot.png) | ![Agents](./docs/agent-list.png) |
+| ![Dashboard](./dashboard-screenshot.png) | ![Agents](./agent-list.png) |
 
 ---
 
