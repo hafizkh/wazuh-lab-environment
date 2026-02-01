@@ -99,6 +99,12 @@ sudo systemctl status wazuh-agent
 
 ---
 
+## 📥 Download the Full Tutorial (PDF)
+
+[👉 Download PDF](./Deploying%20the%20Wazuh%20Lab.pdf)
+
+---
+
 ## 🧑 Author
 
 **Hafiz Javid**  
