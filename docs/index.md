@@ -9,17 +9,12 @@ A step-by-step tutorial for setting up a Wazuh SIEM lab on a single host using v
 ---
 
 ## 📑 Table of Contents
-- [🛡 Deploying a Wazuh Lab in Virtual Environment](#-deploying-a-wazuh-lab-in-virtual-environment)
-  - [📑 Table of Contents](#-table-of-contents)
-  - [1. Preparing the Virtual Environment](#1-preparing-the-virtual-environment)
-  - [2. Installing the Wazuh Server](#2-installing-the-wazuh-server)
-  - [3. Accessing the Wazuh Dashboard](#3-accessing-the-wazuh-dashboard)
-  - [4. Deploying Wazuh Agents via the Dashboard](#4-deploying-wazuh-agents-via-the-dashboard)
-  - [5. Verifying Agent Registration](#5-verifying-agent-registration)
-  - [6. Restarting the Wazuh Services](#6-restarting-the-wazuh-services)
-  - [📥 Download the Full Tutorial (PDF)](#-download-the-full-tutorial-pdf)
-  - [🛰 Follow the Wazuh Weekly Tutorials](#-follow-the-wazuh-weekly-tutorials)
-  - [👤 Connect with Me](#-connect-with-me)
+1. [Preparing the Virtual Environment](#1-preparing-the-virtual-environment)
+2. [Installing the Wazuh Server](#2-installing-the-wazuh-server)
+3. [Accessing the Wazuh Dashboard](#3-accessing-the-wazuh-dashboard)
+4. [Deploying Wazuh Agents via the Dashboard](#4-deploying-wazuh-agents-via-the-dashboard)
+5. [Verifying Agent Registration](#5-verifying-agent-registration)
+6. [Restarting the Wazuh Services](#6-restarting-the-wazuh-services)
 
 ---
 
@@ -29,7 +24,7 @@ Before installing Wazuh, you need an environment that mirrors a small network. I
 
 Figure 1 shows the virtual environment: three Ubuntu machines and one Kali machine, with the server running Ubuntu 22.04 LTS and the agents running Ubuntu 18.04 LTS, Ubuntu 22.04 LTS and Kali Linux 2023.4; the host Windows 11 system serves as an additional agent.
 
-![Virtual Environment of Ubuntu machines](./docs/virtual-environment.png)
+![Virtual Environment of Ubuntu machines](./virtual-environment.png)
 *Figure 1: Virtual Environment of Ubuntu machines*
 
 | Role          | OS                | Description                              |
@@ -56,7 +51,7 @@ curl -sO https://packages.wazuh.com/4.13/wazuh-install.sh && sudo bash ./wazuh-i
 
 This script cleans any previous installation, adds the Wazuh package repository, installs the indexer, manager and dashboard, and outputs credentials for the dashboard. The `-a` flag accepts the licence agreement; the optional `-o` flag overwrites an existing installation. You can use the `-o` flag if you have an existing or partially installed Wazuh setup.
 
-![Completion of Wazuh installation](./docs/wazuh-installation-complete.png)
+![Completion of Wazuh installation](./wazuh-installation-complete.png)
 *Figure 2: Completion of Wazuh installation*
 
 When the installation completes, note the URL and credentials printed in the terminal -- you'll need them to log into the dashboard. To determine the IP address of your server, run:
@@ -75,7 +70,7 @@ Look for the address on your bridged interface. For example, if the server's IP 
 
 Open a web browser on your host or VM and navigate to the URL displayed after installation. Accept the self-signed certificate warning if prompted, then log in using the username and password provided by the installer. The dashboard opens to an overview page showing SIEM, XDR, regulatory compliance and other modules. Since no agents have been deployed yet, the "Agents" section will show **zero** active agents.
 
-![Wazuh dashboard with no agents](./docs/dashboard-no-agents.png)
+![Wazuh dashboard with no agents](./dashboard-no-agents.png)
 *Figure 3: Wazuh dashboard with no agents*
 
 ---
@@ -86,7 +81,7 @@ You can add agents from the **Agents** section of the dashboard. There are two d
 
 From the **Agents** page, click **Deploy new agent**. A form appears prompting you to select the operating system, enter the server address, optionally set a name and group, and then run generated commands on the client machine. For a Linux agent (e.g. Kali), choose the **Deb** package, enter the server's IP (`192.168.0.17` in the example), and accept the default group. The wizard will generate a single shell command that downloads and installs the agent, and it also provides systemd commands to start the service.
 
-![Details of newly deployed agents](./docs/deploy-new-agent.png)
+![Details of newly deployed agents](./deploy-new-agent.png)
 *Figure 4: Details of newly deployed agents*
 
 Run the installation command on the agent VM's terminal as root. After installation, enable and start the agent service using the systemd commands shown in the wizard. For example:
@@ -102,7 +97,7 @@ sudo systemctl status wazuh-agent
 
 The last command should report `active (running)`. If it doesn't, check that the manager IP is correct in the agent's configuration file (`/var/ossec/etc/ossec.conf`). Root privileges are required for these steps.
 
-![Status of the Wazuh agent](./docs/agent-status-running.png)
+![Status of the Wazuh agent](./agent-status-running.png)
 *Figure 5: Status of the Wazuh agent*
 
 Repeat the deployment process for the other agent VMs. Wazuh provides installers for Windows and macOS as well. When deploying the Windows agent, choose the **MSI 64-bit** package from the wizard, enter the server address and download the installer. After running the MSI on your Windows machine, start the Wazuh agent service from the Services app or by running `NET START Wazuh` as administrator.
@@ -113,7 +108,7 @@ Repeat the deployment process for the other agent VMs. Wazuh provides installers
 
 Once each agent service is running, return to the **Agents** page in the dashboard and click **Refresh**. The new agents should appear in the list with green status indicators. The ID, name, IP address and operating system of each agent will be displayed. If an agent appears as **disconnected**, ensure that the service is running on the endpoint and that the `ossec.conf` file contains the correct manager IP.
 
-![Fourth deployed agent](./docs/agents-list-dashboard.png)
+![Fourth deployed agent](./agents-list-dashboard.png)
 *Figure 6: Deployed agents in the Wazuh dashboard*
 
 Hover over the status icon to see details or click the eye icon in the **Actions** column to open the agent detail page.
